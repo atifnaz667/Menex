@@ -1,42 +1,77 @@
 import { createRouter, createWebHistory } from "vue-router";
-import AlternativeLayout from '../layouts/AlternativeLayout.vue';
-import DefaultLayout from '../layouts/DefaultLayout.vue';
+import WebsiteLayout from '../layouts/WebsiteLayout.vue';
+import PanelsLayout from '../layouts/PanelsLayout.vue';
+import BlankLayout from '../layouts/BlankLayout.vue';
 
 const routes = [
+
     {
         path: "/",
-        component: DefaultLayout, // Use the default layout for the home route
+        component: WebsiteLayout,
         children: [
             {
-                path: "",
+                path: "/",
                 component: () => import("../pages/Home.vue"),
-                meta: {layout: 'default', title: "Home" },
+                meta: {layout: 'WebsiteLayout', title: "Home" },
             },
-            {
-                path: "/about",
-                component: () => import("../pages/About.vue"),
-                meta: {layout: 'default', title: "About" },
-            },
-            // Add more routes with DefaultLayout here
+
         ],
     },
     {
-        path: "/alternative",
-        component: AlternativeLayout, // Use the 'AlternativeLayout.vue' component for the 'alternative' layout
+        path: "/",
+        component: PanelsLayout,
         children: [
+
             {
-                path: "",
-                component: () => import("../pages/AlternativeHome.vue"),
-                meta: {layout: 'alternative', title: "Alternative Home" },
+                path: "/dashboard",
+                component: () => import("../pages/panels/Dashboard.vue"),
+                meta: {layout: 'PanelsLayout', title: "Dashboard" , requiresAuth: true },
             },
-            // Add more routes with AlternativeLayout here
+            {
+                path: "/test",
+                component: () => import("../pages/panels/Test.vue"),
+                meta: {layout: 'PanelsLayout', title: "Test Page" },
+            },
+
         ],
     },
+    {
+        path: "/",
+        component: BlankLayout,
+        children: [
+
+            {
+                path: "/login",
+                component: () => import("../pages/auth/Login.vue"),
+                meta: {layout: 'BlankLayout', title: "About", requiresAuth: false },
+            },
+
+        ],
+    },
+
 ];
 
 const router = createRouter({
     history: createWebHistory(),
     routes,
 });
+
+router.beforeEach((to, from, next) => {
+    let accessToken = localStorage.getItem('accessToken');
+    let isAuthenticated = false/* Check if the user is authenticated */;
+    if (accessToken) {
+        isAuthenticated = true;
+    }
+
+    if (to.meta.requiresAuth && !isAuthenticated) {
+        window.location.href = '/login'; // Redirect to login page if not authenticated
+    }else if (to.path === '/login' && isAuthenticated) {
+        // If the user is already authenticated and tries to access the login page, redirect to dashboard
+        next('/dashboard');
+    } else {
+      next(); // Proceed to the next route
+    }
+});
+
 
 export default router;

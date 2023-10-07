@@ -35,6 +35,39 @@ data-template="vertical-menu-template-no-customizer-starter">
     <div id="app">
 
     </div>
+    <div class="bs-toast toast toast-ex animate__animated my-2" role="alert" aria-live="assertive" aria-atomic="true"
+        data-bs-delay="2000">
+        <div class="toast-header">
+            <i class="ti ti-bell ti-xs me-2"></i>
+            <div class="me-auto fw-semibold">Bootstrap</div>
+            {{-- <small class="text-muted">11 mins ago</small> --}}
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            Hello, world! This is a toast messagesss.
+        </div>
+    </div>
+
+    <script>
+        function showToast(status,message){
+        const toastAnimationExample = document.querySelector('.toast-ex');
+        $('.toast-ex .fw-semibold').text(status);
+        $('.toast-ex .toast-body').text(message);
+
+        let selectedType = "text-success";
+        let rmvClass = "text-danger";
+        if (status == 'error') {
+            selectedType = "text-danger";
+            rmvClass = "text-success";
+        }
+        let selectedAnimation = "animate__fade";
+        toastAnimationExample.classList.add(selectedAnimation);
+        toastAnimationExample.querySelector('.ti').classList.remove(rmvClass);
+        toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+        const toastAnimation = new bootstrap.Toast(toastAnimationExample);
+        toastAnimation.show();
+        }
+    </script>
     <script src="{{ asset('assets/vendor/libs/jquery/jquery.js')}}"></script>
     <script src="{{ asset('assets/vendor/libs/popper/popper.js')}}"></script>
     <script src="{{ asset('assets/vendor/js/bootstrap.js')}}"></script>

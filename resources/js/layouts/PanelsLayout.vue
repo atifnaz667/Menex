@@ -46,18 +46,18 @@
                             </router-link>
                         </li>
                         <li class="menu-item">
-                            <router-link to="/about">
+                            <router-link to="/dashboard">
                                 <a class="menu-link">
                                     <i class="menu-icon tf-icons ti ti-app-window"></i>
-                                    <div data-i18n="Page 2">Page 2</div>
+                                    <div data-i18n="Page 2">Dashboard</div>
                                 </a>
                             </router-link>
                         </li>
                         <li class="menu-item">
-                            <router-link to="/alternative">
+                            <router-link to="/test">
                                 <a class="menu-link">
                                     <i class="menu-icon tf-icons ti ti-app-window"></i>
-                                    <div data-i18n="Page 2">Alternate page</div>
+                                    <div data-i18n="Page 2">test page</div>
                                 </a>
                             </router-link>
                         </li>
@@ -139,7 +139,7 @@
                                             <div class="dropdown-divider"></div>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">
+                                            <a class="dropdown-item" href="#" @click="logout">
                                                 <i class="ti ti-logout me-2 ti-sm"></i>
                                                 <span class="align-middle">Log Out</span>
                                             </a>
@@ -169,12 +169,8 @@
                                     <div>
                                         ©
 
-                                        , made with ❤️ by <a href="https://pixinvent.com" target="_blank"
-                                            class="fw-semibold">Pixinvent</a>
-                                    </div>
-                                    <div>
-                                        <a href="https://demos.pixinvent.com/vuexy-html-admin-template/documentation/"
-                                            target="_blank" class="footer-link me-4">Documentation</a>
+                                        2023 <a href="https://econex.com.pk" target="_blank"
+                                            class="fw-semibold">Econex</a>
                                     </div>
                                 </div>
                             </div>
@@ -197,6 +193,8 @@
     </div>
 </template>
 <script>
+import axios from "../axios";
+import router from "../routes/router";
 
 
 export default {
@@ -209,7 +207,21 @@ export default {
         document.head.appendChild(externalScript)
     },
     methods: {
-        // ...methods of your component
+        logout() {
+        axios.post("logout")
+        .then((response) => {
+            var status = response.data.status;
+            var message = response.data.message;
+            localStorage.removeItem('userData')
+            localStorage.removeItem('accessToken')
+            router.push('login');
+            showToast(status,message);
+        })
+        .catch((error) => {
+            console.log(error);
+            showToast("error", "An error occurred during logout.");
+            });
+        }
     }
 };
 </script>
