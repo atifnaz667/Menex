@@ -27,6 +27,7 @@ data-template="vertical-menu-template-no-customizer-starter">
     <link rel="stylesheet" href="{{ asset('assets/css/demo.css')}}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')}}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/node-waves/node-waves.css')}}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.css') }}" />
     <script src="{{ asset('assets/vendor/js/helpers.js')}}"></script>
     <script src="{{ asset('assets/js/config.js')}}"></script>
 </head>
@@ -75,6 +76,7 @@ data-template="vertical-menu-template-no-customizer-starter">
     <script src="{{ asset('assets/vendor/libs/node-waves/node-waves.js')}}"></script>
     <script src="{{ asset('assets/vendor/libs/hammer/hammer.js')}}"></script>
     <script src="{{ asset('assets/vendor/js/menu.js')}}"></script>
+    <script src="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.js') }}"></script>
 </body>
 @vite('resources/js/app.js')
 </html>

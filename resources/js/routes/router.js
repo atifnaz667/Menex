@@ -32,6 +32,11 @@ const routes = [
                 component: () => import("../pages/panels/Test.vue"),
                 meta: {layout: 'PanelsLayout', title: "Test Page" },
             },
+            {
+                path: "/categories",
+                component: () => import("../pages/category/List.vue"),
+                meta: {layout: 'PanelsLayout', title: "Categories Page" },
+            },
 
         ],
     },
@@ -64,7 +69,7 @@ router.beforeEach((to, from, next) => {
     }
 
     if (to.meta.requiresAuth && !isAuthenticated) {
-        window.location.href = '/login'; // Redirect to login page if not authenticated
+        next('/login');
     }else if (to.path === '/login' && isAuthenticated) {
         // If the user is already authenticated and tries to access the login page, redirect to dashboard
         next('/dashboard');

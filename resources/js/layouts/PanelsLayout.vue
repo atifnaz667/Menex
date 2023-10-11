@@ -1,9 +1,36 @@
+<style>
+    .loader {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 2000;
+    }
+
+    .spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top: 4px solid #ffffff;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+    }
+</style>
+
 <template>
     <div>
         <div class="layout-wrapper layout-content-navbar">
             <div class="layout-container">
                 <!-- Menu -->
-
                 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
                     <div class="app-brand demo">
                         <a href="index.html" class="app-brand-link">
@@ -37,14 +64,6 @@
 
                     <ul class="menu-inner py-1">
                         <!-- Page -->
-                        <li class="menu-item active">
-                            <router-link to="/">
-                                <a class="menu-link ">
-                                    <i class="menu-icon tf-icons ti ti-smart-home"></i>
-                                    <div data-i18n="Page 1">Home</div>
-                                </a>
-                            </router-link>
-                        </li>
                         <li class="menu-item">
                             <router-link to="/dashboard">
                                 <a class="menu-link">
@@ -54,10 +73,10 @@
                             </router-link>
                         </li>
                         <li class="menu-item">
-                            <router-link to="/test">
+                            <router-link to="/categories">
                                 <a class="menu-link">
-                                    <i class="menu-icon tf-icons ti ti-app-window"></i>
-                                    <div data-i18n="Page 2">test page</div>
+                                    <i class="menu-icon tf-icons ti ti-color-swatch"></i>
+                                    <div data-i18n="Page 2">Categories</div>
                                 </a>
                             </router-link>
                         </li>
@@ -198,15 +217,18 @@ import router from "../routes/router";
 
 
 export default {
-    data: () => ({
-        // ...data of your component
-    }),
+    data() {
+        return {
+            loading : false
+        };
+    },
     mounted() {
         let externalScript = document.createElement('script')
         externalScript.setAttribute('src', '/assets/js/main.js')
         document.head.appendChild(externalScript)
     },
     methods: {
+
         logout() {
         axios.post("logout")
         .then((response) => {
