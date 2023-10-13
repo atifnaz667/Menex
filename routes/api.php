@@ -29,11 +29,12 @@ Route::middleware('jwt.auth')->group(function () {
 
     Route::get('blogs', [BlogController::class, 'index']);
 
-
     Route::get('categories', [CategoryController::class, 'index']);
     Route::post('add/category', [CategoryController::class, 'store']);
     Route::get('edit/category/{id}', [CategoryController::class, 'show']);
     Route::put('update/category/{id}', [CategoryController::class, 'update']);
     Route::delete('delete/category/{id}', [CategoryController::class, 'destroy']);
+
+    Route::post('upload/blog/image', [BlogController::class, 'uploadBlogImage']);
 
 });

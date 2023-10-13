@@ -28,6 +28,11 @@
 
 <template>
     <div>
+        <div v-if="$store.state.isLoading">
+            <div class="loader">
+                <div class="spinner"></div>
+            </div>
+        </div>
         <div class="layout-wrapper layout-content-navbar">
             <div class="layout-container">
                 <!-- Menu -->
@@ -77,6 +82,14 @@
                                 <a class="menu-link">
                                     <i class="menu-icon tf-icons ti ti-color-swatch"></i>
                                     <div data-i18n="Page 2">Categories</div>
+                                </a>
+                            </router-link>
+                        </li>
+                        <li class="menu-item">
+                            <router-link to="/add/blog">
+                                <a class="menu-link">
+                                    <i class="menu-icon tf-icons ti ti-color-swatch"></i>
+                                    <div data-i18n="Page 2">Blogs</div>
                                 </a>
                             </router-link>
                         </li>

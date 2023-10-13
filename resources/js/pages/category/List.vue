@@ -1,7 +1,6 @@
 
 <template>
     <div class="container-xxl flex-grow-1 container-p-y">
-        <loader v-if="loading" ></loader>
         <h4 class="fw-bold py-1">
             <span class="text-muted fw-light">Categories/</span>
             List
@@ -132,8 +131,7 @@
 <script>
 import axios from "../../axios";
 import Pagination from "../../components/Pagination.vue";
-import Loader from "../../components/Loader.vue";
-
+import {mapMutations} from 'vuex';
 export default {
     data() {
         return {
@@ -152,7 +150,6 @@ export default {
     },
     components: {
     Pagination,
-    Loader,
     },
     computed: {
         displayedRecords() {
@@ -169,8 +166,11 @@ export default {
         this.fetchRecords();
     },
     methods: {
+        ...mapMutations({
+            setLoading : 'setLoading'
+        }),
         fetchRecords() {
-            this.loading = true;
+            this.setLoading(true);
             axios.get(`categories?page=${this.currentPage}&perPage=${this.perPage}&categoryName=${this.categoryName}`)
             .then((response) => {
                 this.categories = response.data.categories.data;
@@ -182,7 +182,7 @@ export default {
                 showToast("error", error.response.data.message);
             })
             .finally(() => {
-                this.loading = false;
+                this.setLoading(false);
             });
 
         },
@@ -191,7 +191,7 @@ export default {
             this.fetchRecords();
         },
         storeRecord(){
-            this.loading = true;
+            this.setLoading(true)
             axios.post(`add/category?name=${this.storeCategoryName}`)
             .then((response) => {
                 this.storeCategoryName = '';
@@ -205,7 +205,7 @@ export default {
                 showToast("error", error.response.data.message);
             })
             .finally(() => {
-                this.loading = false;
+                this.setLoading(false);
             });
         },
         deleteRecord(id) {
@@ -222,7 +222,7 @@ export default {
                 buttonsStyling: false
             }).then((result) => {
                 if (result.value) {
-                this.loading = true;
+                this.setLoading(true)
                 axios.delete(`delete/category/${id}`)
                 .then((response) => {
                     var status = response.data.status;
@@ -234,7 +234,7 @@ export default {
                     showToast("error", error.response.data.message);
                 })
                     .finally(() => {
-                    this.loading = false;
+                    this.setLoading(false);
                 });
                 }
             });
@@ -254,11 +254,11 @@ export default {
                 showToast("error", error.response.data.message);
             })
                 .finally(() => {
-                this.loading = false;
+                this.setLoading(false);
             });
         },
         updateRecord(){
-            this.loading = true;
+            this.setLoading(true)
             axios.put(`update/category/${this.updateCategoryId}?name=${this.updateCategoryName}`)
             .then((response) => {
                 this.storeCategoryName = '';
@@ -272,7 +272,7 @@ export default {
                 showToast("error", error.response.data.message);
             })
             .finally(() => {
-                this.loading = false;
+                this.setLoading(false);
             });
         }
     },

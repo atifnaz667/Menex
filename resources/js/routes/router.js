@@ -28,14 +28,14 @@ const routes = [
                 meta: {layout: 'PanelsLayout', title: "Dashboard" , requiresAuth: true },
             },
             {
-                path: "/test",
-                component: () => import("../pages/panels/Test.vue"),
-                meta: {layout: 'PanelsLayout', title: "Test Page" },
-            },
-            {
                 path: "/categories",
                 component: () => import("../pages/category/List.vue"),
                 meta: {layout: 'PanelsLayout', title: "Categories Page" },
+            },
+            {
+                path: "/add/blog",
+                component: () => import("../pages/blog/Add.vue"),
+                meta: {layout: 'PanelsLayout', title: "Blogs Page" },
             },
 
         ],

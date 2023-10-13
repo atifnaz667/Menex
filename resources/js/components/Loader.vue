@@ -1,7 +1,0 @@
-<template>
-    <div>
-        <div class="loader">
-            <div class="spinner"></div>
-        </div>
-    </div>
-</template>
