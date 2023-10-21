@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
+use App\Services\ConvertToHtml;
 use App\Services\CustomErrorMessages;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class BlogController extends Controller
@@ -30,7 +32,17 @@ class BlogController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // $data =  ConvertToHtml::convertEditorJSBlockToHTML(json_decode($request->data));
+
+        // $blog =  new Blog;
+        // $blog->user_id = Auth::user()->id;
+        // $blog->content = $data;
+        // $blog->title = '';
+        // $blog->save();
+
+        $getBlog = Blog::first();
+        $data =  ConvertToHtml::convertHTMLToEditorJS($getBlog->content);
+        return response()->json(['status' => 'success', 'message'=>'Blog saved successfully', 'data' => $data], 200);
     }
 
     /**
@@ -72,15 +84,15 @@ class BlogController extends Controller
     public function uploadBlogImage(Request $req)
     {
         $rules = array(
-            'name' => 'required|mimes:jpg,jpeg,png',
+            'image' => 'required|mimes:jpg,jpeg,png',
         );
-        $validator = Validator::make($rules);
+        $validator = Validator::make($req->all(), $rules);
         if ($validator->fails()) {
-            return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 422);
+            return ['status' => 'error', 'message' => $validator->errors()->first()];
         }
         try {
             $picName = time().'.'.$req->image->extension();
-            $targetDir = "public/assets/img/uploads/";
+            $targetDir = "assets/img/uploads/";
             $path = $targetDir . $picName;
             move_uploaded_file($_FILES['image']['tmp_name'], $path);
             $filePath = request()->root() . "/" . $path;

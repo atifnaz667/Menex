@@ -2,6 +2,7 @@
 <template>
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="card">
+            <span class="px-3 pt-3">{{ savingData }}</span>
             <div id="editorContainer" class="mt-4"></div>
             <div class="row ">
                 <div class="col-sm-12 d-flex justify-content-center">
@@ -14,6 +15,8 @@
 
 <script>
 import EditorJS from "@editorjs/editorjs";
+import axios from "../../axios";
+import {mapMutations} from 'vuex';
 import Table from '@editorjs/table';
 import Header from '@editorjs/header';
 import LinkTool from '@editorjs/link';
@@ -27,11 +30,15 @@ export default {
     data() {
         return {
         editor: null,
+        loading : false,
+        draftData : localStorage.getItem("draftData"),
+        savingData : ''
         };
     },
     mounted() {
-        this.editor = new EditorJS({
 
+        this.editor = new EditorJS({
+            data: this.draftData,
             placeholder: 'Enter Title',
             holder: 'editorContainer',
             tools: {
@@ -53,7 +60,7 @@ export default {
                 linkTool: {
                     class: LinkTool,
                     config: {
-                        endpoint: 'http://localhost:8000/upload/blog/image', // Your backend endpoint for url data fetching,
+                        endpoint: '/api/fetch/url/metadata', // Your backend endpoint for url data fetching,
                     }
                 },
                 quote: {
@@ -69,7 +76,7 @@ export default {
                     class: ImageTool,
                     config: {
                         endpoints: {
-                            byFile: 'http://localhost:8000/upload/blog/image', // Your backend file uploader endpoint
+                            byFile: 'http://localhost/Menex/public/api/upload/blog/image', // Your backend file uploader endpoint
                             byUrl: 'http://localhost:8008/fetchUrl', // Your endpoint that provides uploading by Url
                         }
                     }
@@ -96,13 +103,42 @@ export default {
 
             },
             defaultBlock: 'header'
-        });
+
+        })
     },
     methods:{
+        ...mapMutations({
+            setLoading : 'setLoading'
+        }),
         onSave(){
             this.editor.save().then((outputData) => {
-                console.log('Article data: ', outputData)
+                this.setLoading(true);
+                const dataToPost = JSON.stringify(outputData.blocks);
+                axios.post('add/blog', { data: dataToPost })
+                .then((response) => {
+                    var status = response.data.status;
+                    var message = response.data.message;
+                    showToast(status,message);
+                    console.log(response.data.data)
+                })
+                .catch((error) => {
+                    showToast("error", error.response.data.message);
+                })
+                .finally(() => {
+                    this.setLoading(false);
+                });
             }).catch((error) => {
+                this.setLoading(false);
+                console.log('Saving failed: ', error)
+            });
+        },
+        saveDraftData(){
+            this.savingData = 'Saving...';
+            this.editor.save().then((outputData) => {
+            localStorage.setItem('draftData', JSON.stringify(outputData.blocks));
+            this.savingData = 'Saved';
+        }).catch((error) => {
+                this.savingData = '';
                 console.log('Saving failed: ', error)
             });
         }

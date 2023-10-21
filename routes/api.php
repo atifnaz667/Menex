@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\EditorJsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +36,8 @@ Route::middleware('jwt.auth')->group(function () {
     Route::put('update/category/{id}', [CategoryController::class, 'update']);
     Route::delete('delete/category/{id}', [CategoryController::class, 'destroy']);
 
-    Route::post('upload/blog/image', [BlogController::class, 'uploadBlogImage']);
+    Route::post('add/blog', [BlogController::class, 'store']);
 
 });
+Route::post('upload/blog/image', [BlogController::class, 'uploadBlogImage']);
+Route::get('fetch/url/metadata', [EditorJsController::class, 'fetchUrlMetadata']);
